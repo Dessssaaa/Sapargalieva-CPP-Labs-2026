@@ -1,0 +1,21 @@
+# CLion / CMake
+cmake-build-*/
+.idea/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cbp
+
+# Скомпилированные файлы
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+
+# Системные файлы
+.DS_Store
+Thumbs.db
