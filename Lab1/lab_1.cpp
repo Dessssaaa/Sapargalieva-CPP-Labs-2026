@@ -1,21 +1,21 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
 int main() {
-    int duration;      // длительность разговора, мин
-    int startHour;     // час начала разговора (0-23)
-    int dayOfWeek;     // день недели (1-7, 1 - понедельник)
-    int isRegular;     // постоянный клиент: 1 - да, 0 - нет
+    int duration;
+    int startHour;
+    int dayOfWeek;
+    int isRegular;
 
     cout << "Введите данные звонка:\n";
 
     cout << "Длительность (мин): ";
     cin >> duration;
 
-    // Проверка корректности длительности
     if (duration <= 0) {
         cout << "Ошибка: длительность должна быть больше нуля.\n";
         return 1;
@@ -24,7 +24,6 @@ int main() {
     cout << "Час начала (0-23): ";
     cin >> startHour;
 
-    // Проверка диапазона часов
     if (startHour < 0 || startHour > 23) {
         cout << "Ошибка: час начала должен быть в диапазоне от 0 до 23.\n";
         return 1;
@@ -46,18 +45,13 @@ int main() {
         return 1;
     }
 
-    // --- Определение тарифа (вложенные ветвления) ---
-    double rate;            // руб./мин
+    double rate;
     string tariffName;
 
-    bool isWeekend = (dayOfWeek == 6 || dayOfWeek == 7); // сб, вс
-
-    if (isWeekend) {
-        // Выходные: фиксированная ставка на все время
+    if (dayOfWeek == 6 || dayOfWeek == 7) {
         rate = 2.0;
         tariffName = "выходной (2.00 руб/мин)";
     } else {
-        // Будни: тариф зависит от времени суток
         if (startHour >= 8 && startHour < 22) {
             rate = 5.0;
             tariffName = "будни-день (5.00 руб/мин)";
@@ -67,40 +61,29 @@ int main() {
         }
     }
 
-    // --- Расчет стоимости ---
-    // Каждая промежуточная сумма округляется до копеек, как в чеке
-    auto roundToCents = [](double value) {
-        return round(value * 100.0) / 100.0;
-    };
+    double baseCost = duration * rate;
 
-    double baseCost = roundToCents(duration * rate);
-
-    // Скидка за длительность (от 60 минут - 10%)
-    double durationDiscount = 0.0;
+    double durationDiscount = 0;
     if (duration >= 60) {
-        durationDiscount = roundToCents(baseCost * 0.10);
+        durationDiscount = round(baseCost * 0.10 * 100) / 100;
     }
-    double afterDurationDiscount = roundToCents(baseCost - durationDiscount);
+    double afterDuration = baseCost - durationDiscount;
 
-    // Скидка постоянному клиенту (+5% от оставшейся суммы)
-    double regularDiscount = 0.0;
+    double regularDiscount = 0;
     if (isRegular == 1) {
-        regularDiscount = roundToCents(afterDurationDiscount * 0.05);
+        regularDiscount = round(afterDuration * 0.05 * 100) / 100;
     }
-    double totalBeforeVat = roundToCents(afterDurationDiscount - regularDiscount);
 
-    // НДС 20%
-    double vat = roundToCents(totalBeforeVat * 0.20);
-    double totalToPay = roundToCents(totalBeforeVat + vat);
+    double totalBeforeVat = round((afterDuration - regularDiscount) * 100) / 100;
+    double vat = round(totalBeforeVat * 0.20 * 100) / 100;
+    double totalToPay = totalBeforeVat + vat;
 
-    // --- Вывод детализированного чека ---
-    cout << fixed << setprecision(2);
     cout << "\n=== РАСЧЕТ СТОИМОСТИ ===\n";
     cout << "Тариф: " << tariffName << "\n";
     cout << "Базовая стоимость: " << baseCost << " руб\n";
     cout << "Скидки:\n";
-    cout << "- За длительность: " << durationDiscount << " руб\n";
-    cout << "- Постоянный клиент: " << regularDiscount << " руб\n";
+    cout << "  - За длительность: " << durationDiscount << " руб\n";
+    cout << "  - Постоянный клиент: " << regularDiscount << " руб\n";
     cout << "Итого без НДС: " << totalBeforeVat << " руб\n";
     cout << "НДС 20%: " << vat << " руб\n";
     cout << "К ОПЛАТЕ: " << totalToPay << " руб\n";
