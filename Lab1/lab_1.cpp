@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <cmath>
 #include <string>
-
 using namespace std;
 
 int main() {
@@ -62,14 +61,15 @@ int main() {
     }
 
     double baseCost = duration * rate;
-
     double durationDiscount = 0;
+
     if (duration >= 60) {
         durationDiscount = round(baseCost * 0.10 * 100) / 100;
     }
-    double afterDuration = baseCost - durationDiscount;
 
+    double afterDuration = baseCost - durationDiscount;
     double regularDiscount = 0;
+
     if (isRegular == 1) {
         regularDiscount = round(afterDuration * 0.05 * 100) / 100;
     }
@@ -78,12 +78,13 @@ int main() {
     double vat = round(totalBeforeVat * 0.20 * 100) / 100;
     double totalToPay = totalBeforeVat + vat;
 
+    cout << fixed << setprecision(2);
     cout << "\n=== РАСЧЕТ СТОИМОСТИ ===\n";
     cout << "Тариф: " << tariffName << "\n";
     cout << "Базовая стоимость: " << baseCost << " руб\n";
     cout << "Скидки:\n";
-    cout << "  - За длительность: " << durationDiscount << " руб\n";
-    cout << "  - Постоянный клиент: " << regularDiscount << " руб\n";
+    cout << " - За длительность: " << durationDiscount << " руб\n";
+    cout << " - Постоянный клиент: " << regularDiscount << " руб\n";
     cout << "Итого без НДС: " << totalBeforeVat << " руб\n";
     cout << "НДС 20%: " << vat << " руб\n";
     cout << "К ОПЛАТЕ: " << totalToPay << " руб\n";
