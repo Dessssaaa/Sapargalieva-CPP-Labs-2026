@@ -34,7 +34,6 @@ void task1()
             xl = xm;
     }
 
-    xm = (xl + xr) / 2;
     cout << fixed << setprecision(5);
     cout << "Корень уравнения x = " << setw(8) << xm << endl;
 }
@@ -58,8 +57,7 @@ void task2()
         s = 1;
         n = 0;
 
-        while (a >= eps)
-        {
+        while (a >= eps) {
             n++;
             a = a * 2 * x / n;
             s += a;
